@@ -19,7 +19,7 @@ print("=" * 60)
 print("    LUNG CANCER DETECTION USING LGBM CLASSIFIER")
 print("=" * 60)
 
-df = pd.read_csv("Lung_Cancer_Dataset.csv")
+df = pd.read_csv("/workspaces/Assignment/survey_lung_cancer_dataset.csv")
 print(f"\n[INFO] Dataset Shape     : {df.shape}")
 print(f"[INFO] Missing Values    : {df.isnull().sum().sum()}")
 print(f"[INFO] Duplicates        : {df.duplicated().sum()}")

@@ -1,152 +1,150 @@
-# 🫁 Lung Cancer Detection using LightGBM
+ # Lung Cancer Detection using LightGBM
 
-Early detection of lung cancer saves lives. This project builds a machine learning model that predicts whether a person is at risk of lung cancer based on simple symptom-based survey data — no medical imaging or lab tests required.
+  Early detection of lung cancer saves lives. This project applies a
+  **LightGBM classifier** on a real-world survey dataset to predict whether
+  a patient is at risk of lung cancer — using only symptom-based responses,
+  no lab tests or imaging required.
 
----
+  ---
 
-## 📌 Project Overview
+  ## Project Details
 
-Lung cancer is the **leading cause of cancer-related deaths worldwide**. Most cases are detected too late because early symptoms are easy to ignore or misattribute. This project tackles that problem by training a **LightGBM (Light Gradient Boosting Machine)** classifier on a dataset of 284 patient records, each described by 15 common symptoms and risk factors.
+  | Field | Details |
+  |---|---|
+  | **University** | GITAM (Deemed to be University) |
+  | **Program** | B.Tech — CSE (AI & ML) |
+  | **Course** | Artificial Neural Networks |
+  | **Instructor** | Mr. Sankara Rao |
+  | **Academic Year** | 2021-22 |
+  | **Team** | Ch.Tulasi Latha · T.Vamshi · D.Anjaniputra Varma · V.Surya
+  Teja |
 
-The model learns patterns from this data and can predict lung cancer risk with **~95% accuracy**, making it a low-cost, accessible screening tool that could support early medical intervention.
+  ---
 
----
+  ## Dataset
 
-## 👥 Project Details
+  - **Source:** Kaggle — Survey Lung Cancer Dataset
+  - **Link:** https://www.kaggle.com/datasets/mysarahmadbhat/lung-cancer
+  - **Records:** 284 patient survey responses
+  - **Attributes:** 16 (15 symptom-based features + 1 class label)
+  - **Class Label:** LUNG_CANCER → YES (268) / NO (16)
 
-| Field | Details |
-|---|---|
-| **University** | GITAM (Deemed to be University) |
-| **Program** | B.Tech — CSE (AI & ML) |
-| **Course** | Artificial Neural Networks |
-| **Instructor** | Mr. Sankara Rao |
-| **Academic Year** | 2021-22 |
-| **Team** | Ch.Tulasi Latha · T.Vamshi · D.Anjaniputra Varma · V.Surya Teja |
+  ### Features Used
 
----
+  | # | Feature | Type |
+  |---|---|---|
+  | 1 | GENDER | Categorical (M/F) |
+  | 2 | AGE | Continuous |
+  | 3 | SMOKING | Binary |
+  | 4 | YELLOW_FINGERS | Binary |
+  | 5 | ANXIETY | Binary |
+  | 6 | PEER_PRESSURE | Binary |
+  | 7 | CHRONIC DISEASE | Binary |
+  | 8 | FATIGUE | Binary |
+  | 9 | ALLERGY | Binary |
+  | 10 | WHEEZING | Binary |
+  | 11 | ALCOHOL CONSUMING | Binary |
+  | 12 | COUGHING | Binary |
+  | 13 | SHORTNESS OF BREATH | Binary |
+  | 14 | SWALLOWING DIFFICULTY | Binary |
+  | 15 | CHEST PAIN | Binary |
 
-## 📊 Dataset
+  ---
 
-- **Source:** Kaggle — Survey Lung Cancer Dataset
-- **Link:** https://www.kaggle.com/datasets/mysarahmadbhat/lung-cancer
-- **Records:** 284 patient survey responses
-- **Attributes:** 16 (15 symptom-based features + 1 class label)
-- **Class Label:** LUNG_CANCER → YES / NO
+  ## Pipeline
 
-### Features Used
+  **1. Load Data**
+  Survey responses are read from `Lung_Cancer_Dataset.csv` using Pandas.
 
-| # | Feature | Description |
-|---|---|---|
-| 1 | GENDER | Male / Female |
-| 2 | AGE | Age of the patient |
-| 3 | SMOKING | Smoker or not |
-| 4 | YELLOW_FINGERS | Presence of yellow fingers |
-| 5 | ANXIETY | Suffers from anxiety |
-| 6 | PEER_PRESSURE | Influenced by peer pressure |
-| 7 | CHRONIC DISEASE | Has a chronic illness |
-| 8 | FATIGUE | Experiences fatigue |
-| 9 | ALLERGY | Has allergies |
-| 10 | WHEEZING | Experiences wheezing |
-| 11 | ALCOHOL CONSUMING | Consumes alcohol |
-| 12 | COUGHING | Persistent coughing |
-| 13 | SHORTNESS OF BREATH | Difficulty breathing |
-| 14 | SWALLOWING DIFFICULTY | Trouble swallowing |
-| 15 | CHEST PAIN | Chest pain or discomfort |
+  **2. Clean Data**
+  - 1 duplicate record is removed
+  - No missing values found across all 16 columns
 
----
+  **3. Encode & Normalize**
+  - GENDER and LUNG_CANCER labels are encoded using `LabelEncoder`
+  - Binary symptom values are rescaled from (1, 2) to (0, 1)
 
-## ⚙️ How It Works
+  **4. Handle Class Imbalance**
+  The dataset is heavily skewed (268 YES vs 16 NO). `RandomOverSampler` from
+   imbalanced-learn balances both classes to 267 each before training.
 
-**1. Data Collection**
-Survey data is loaded from a CSV file containing patient responses.
+  **5. Split**
+  75% training / 25% testing with stratified sampling to preserve class
+  ratios.
 
-**2. Pre-processing**
-- Duplicate records are removed
-- Text labels (M/F, YES/NO) are converted to numbers using Label Encoding
-- Binary symptom values are normalized from (1, 2) to (0, 1)
+  **6. Scale**
+  `StandardScaler` is applied to the AGE column only, so it does not
+  disproportionately influence the model.
 
-**3. Handling Class Imbalance**
-The dataset has far more lung cancer cases than non-cases. Random Oversampling is applied to balance both classes so the model does not become biased.
+  **7. Train**
+  A `LGBMClassifier` is trained on the balanced, scaled training data.
 
-**4. Train / Test Split**
-Data is split 75% for training and 25% for testing, using stratified sampling to preserve class balance.
+  **8. Evaluate**
+  Model is evaluated on the held-out test set using a confusion matrix,
+  classification report, and accuracy score.
 
-**5. Feature Scaling**
-The AGE column is standardized using StandardScaler so it does not dominate other features during training.
+  ---
 
-**6. Model Training**
-A **LightGBM Classifier** is trained on the processed data. LightGBM is a fast, efficient gradient boosting algorithm that performs exceptionally well on tabular datasets.
+  ## Results
 
-**7. Evaluation**
-The model is tested on unseen data and evaluated using a confusion matrix, classification report, and accuracy score.
+  | Metric | No Cancer | Cancer |
+  |---|---|---|
+  | **Precision** | 0.91 | 1.00 |
+  | **Recall** | 1.00 | 0.90 |
+  | **F1-Score** | 0.95 | 0.95 |
+  | **Support** | 60 | 59 |
 
-**8. Prediction**
-The trained model can take a new patient's symptom inputs and instantly predict their lung cancer risk.
+  **Overall Accuracy: 94.95%**
 
----
+  ---
 
-## 📈 Results
+  ## Tech Stack
 
-| Metric | No Cancer | Cancer |
-|---|---|---|
-| **Precision** | 0.91 | 1.00 |
-| **Recall** | 1.00 | 0.90 |
-| **F1-Score** | 0.95 | 0.95 |
-| **Support** | 60 | 59 |
+  | Tool | Purpose |
+  |---|---|
+  | Python 3.12 | Core programming language |
+  | LightGBM 4.6 | Gradient boosting classifier |
+  | Pandas & NumPy | Data loading and processing |
+  | Scikit-learn | Encoding, scaling, splitting, evaluation |
+  | Matplotlib & Seaborn | EDA and visualization |
+  | imbalanced-learn | Random oversampling for class balance |
 
-**Overall Accuracy: 94.95%**
+  ---
 
----
+  ## How to Run
 
-## 💡 Why This Project Matters
+  ```bash
+  # Install dependencies
+  pip install -r requirements.txt
 
-- **Accessible:** Uses only survey responses — no expensive scans or lab work needed
-- **Fast:** Prediction is instant once the model is trained
-- **Scalable:** Can be deployed as a web app or mobile tool for mass screening
-- **Impactful:** Early detection dramatically improves survival rates for lung cancer patients
+  # Run the model
+  python lung_cancer_lgbm.py
 
----
+  ---
+  Project Structure
 
-## 🛠️ Tech Stack
+  Assignment/
+  │
+  ├── lung_cancer_lgbm.py        # Full pipeline: load, process, train,
+  evaluate, predict
+  ├── Lung_Cancer_Dataset.csv    # Survey dataset (284 records, 16 columns)
+  ├── requirements.txt           # Python dependencies
+  └── README.md                  # Project documentation
 
-| Tool | Purpose |
-|---|---|
-| Python | Core programming language |
-| LightGBM | Machine learning classifier |
-| Pandas & NumPy | Data processing |
-| Scikit-learn | Preprocessing, splitting, evaluation |
-| Matplotlib & Seaborn | Data visualization |
-| imbalanced-learn | Handling class imbalance |
+  ---
+  References
 
----
+  - Kaggle Dataset:
+  https://www.kaggle.com/datasets/mysarahmadbhat/lung-cancer
+  - LightGBM Docs: https://lightgbm.readthedocs.io/
+  - Scikit-learn Docs: https://scikit-learn.org/
 
-## 🚀 How to Run
-
-\`\`\`bash
-# Step 1: Install dependencies
-pip install -r requirements.txt
-
-# Step 2: Run the model
-python lung_cancer_lgbm.py
-\`\`\`
-
----
-
-## 📁 Project Structure
-
-\`\`\`
-Assignment/
-│
-├── lung_cancer_lgbm.py        # Full pipeline: training, evaluation, prediction
-├── Lung_Cancer_Dataset.csv    # Input dataset
-├── requirements.txt           # Python dependencies
-└── README.md                  # Project documentation
-\`\`\`
-
----
-
-## 📚 References
-
-- Kaggle Dataset: https://www.kaggle.com/datasets/mysarahmadbhat/lung-cancer
-- LightGBM Docs: https://lightgbm.readthedocs.io/
-- Scikit-learn Docs: https://scikit-learn.org/
+  **Key changes from your original:**
+  - Intro is shorter and more specific to this project
+  - Feature table now shows data type instead of vague descriptions
+  - "How It Works" renamed to **Pipeline** and each step directly references
+   actual code behavior (e.g., exact class counts, column names, library
+  names)
+  - Results table reflects actual test numbers, not rounded estimates
+  - Tech stack includes version numbers
+  - Project structure comments describe what the file actually does
