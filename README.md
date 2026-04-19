@@ -1,3 +1,10 @@
+  # Lung Cancer Detection using LightGBM
+
+  Early detection of lung cancer saves lives. This project applies a **LightGBM classifier** on a real-world survey dataset to predict whether a patient is
+  at risk of lung cancer — using only symptom-based responses, no lab tests or imaging required.
+
+  ---
+
   ## Project Details
 
   | Field | Details |
@@ -99,15 +106,12 @@
 
   ## How to Run
 
-  ```bash
-  # Install dependencies
-  pip install -r requirements.txt
-
-  # Run the model
-  python lung_cancer_lgbm.py
+  1. Install dependencies — `pip install -r requirements.txt`
+  2. Run the model — `python lung_cancer_lgbm.py`
 
   ---
-  Project Structure
+
+  ## Project Structure
 
   Assignment/
   │
@@ -117,15 +121,9 @@
   └── README.md                        # Project documentation
 
   ---
-  References
+
+  ## References
 
   - Kaggle Dataset: https://www.kaggle.com/datasets/mysarahmadbhat/lung-cancer
   - LightGBM Docs: https://lightgbm.readthedocs.io/
   - Scikit-learn Docs: https://scikit-learn.org/
-
-  Copy this exactly into your `README.md`, then push:
-
-  ```bash
-  git add README.md
-  git commit -m "Fix README with correct dataset filename and structure"
-  git push origin main
