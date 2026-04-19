@@ -112,7 +112,7 @@
   ---
 
   ## Project Structure
-
+  Lung-Cancer-Detection-using-LightGBM\
   - `lung_cancer_lgbm.py` — Full pipeline: load, process, train, evaluate, predict
   - `survey_lung_cancer_dataset.csv` — Survey dataset (284 records, 16 columns)
   - `requirements.txt` — Python dependencies
